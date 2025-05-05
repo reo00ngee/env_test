@@ -7,6 +7,27 @@ services:
         ipv4_address: 172.20.0.10
     ports:
       - "8080:80"
+    volumes:
+      - ./www:/home/web/www
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./log:/home/web/log
+    environment:
+      - NGINX_USER=web
+
+  php_fpm:
+    image: php:7.4-fpm
+    container_name: php-fpm
+    networks:
+      custom_network:
+        ipv4_address: 172.20.0.11
+    volumes:
+      - ./www:/home/web/www
+      - ./php-fpm.conf:/etc/php/7.4/fpm/pool.d/www.conf
+      - ./log:/home/web/log
+    environment:
+      - PHP_FPM_USER=web
+      - PHP_FPM_GROUP=web
+
 networks:
   custom_network:
     ipam:
