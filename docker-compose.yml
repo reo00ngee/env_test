@@ -1,0 +1,14 @@
+services:
+  web_server:
+    image: nginx
+    container_name: web-server
+    networks:
+      custom_network:
+        ipv4_address: 172.20.0.10
+    ports:
+      - "8080:80"
+networks:
+  custom_network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
