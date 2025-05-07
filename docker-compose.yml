@@ -1,6 +1,9 @@
 services:
   web_server:
-    image: nginx:latest
+    # image: nginx:latest
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: web-server
     networks:
       custom_network:

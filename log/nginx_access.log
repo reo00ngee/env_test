@@ -39,3 +39,6 @@
 172.20.0.1 - - [07/May/2025:21:21:46 +0000] "GET /info.php HTTP/1.1" 200 77064 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
 172.20.0.1 - - [07/May/2025:21:27:57 +0000] "GET / HTTP/1.1" 403 555 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
 172.20.0.1 - - [07/May/2025:21:28:05 +0000] "GET /info.php HTTP/1.1" 200 76895 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+172.20.0.1 - - [07/May/2025:21:58:44 +0000] "GET / HTTP/1.1" 403 555 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+172.20.0.1 - - [07/May/2025:21:58:49 +0000] "GET /info.php HTTP/1.1" 200 77244 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+172.20.0.1 - - [07/May/2025:21:58:55 +0000] "GET /test-error.php HTTP/1.1" 200 256 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
