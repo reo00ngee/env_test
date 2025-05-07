@@ -1,2 +1,6 @@
 [08-May-2025 04:29:44 Asia/Tokyo] PHP Warning:  Undefined variable $undefined_variable in /home/web/www/test-error.php on line 3
 [08-May-2025 04:29:44 Asia/Tokyo] PHP Fatal error:  手動エラー: テスト中 in /home/web/www/test-error.php on line 6
+[08-May-2025 06:20:34 Asia/Tokyo] PHP Warning:  Undefined variable $undefined_variable in /home/web/www/test-error.php on line 3
+[08-May-2025 06:20:34 Asia/Tokyo] PHP Fatal error:  手動エラー: テスト中 in /home/web/www/test-error.php on line 6
+[08-May-2025 06:20:53 Asia/Tokyo] PHP Warning:  Undefined variable $undefined_variable in /home/web/www/test-error.php on line 3
+[08-May-2025 06:20:53 Asia/Tokyo] PHP Fatal error:  手動エラー: テスト中 in /home/web/www/test-error.php on line 6
