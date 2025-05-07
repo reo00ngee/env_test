@@ -15,14 +15,17 @@ services:
       - NGINX_USER=web
 
   php_fpm:
-    image: php:7.4-fpm
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: php-fpm
     networks:
       custom_network:
         ipv4_address: 172.20.0.11
     volumes:
       - ./www:/home/web/www
-      - ./php-fpm.conf:/etc/php/7.4/fpm/pool.d/www.conf
+      - ./php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ./php/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ./log:/home/web/log
     environment:
       - PHP_FPM_USER=web
