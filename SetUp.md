@@ -6,6 +6,7 @@
   - [3. Set up](#3-set-up)
     - [3-1. Install nginx and php-fpm](#3-1-install-nginx-and-php-fpm)
     - [3-2. Configure the container to run as the web user](#3-2-configure-the-container-to-run-as-the-web-user)
+    - [3-3. Configure to output log files](#3-3-configure-to-output-log-files)
 
 
 ## 1. Overview
@@ -300,6 +301,45 @@ http {
     }
 }
 ```
+
+### 3-3. Configure to output log files
+Configure to output log files with conf files.  
+
+- php/php.ini
+```
+[PHP]
+
+; エラー表示設定（開発用）
+display_errors = On
+display_startup_errors = On
+error_reporting = E_ALL
+log_errors = On
+error_log = /home/web/log/php-error.log
+
+```
+
+- php/php-fpm.conf
+```
+[global]
+error_log = /home/web/log/fpm-error.log
+
+include=/usr/local/etc/php-fpm.d/*.conf
+```
+
+- php/php-fpm.d/www.conf
+```
+php_admin_flag[log_errors] = on
+php_admin_value[error_log] = /home/web/log/php-error.log
+```
+
+- nginx/default.conf
+```
+http {
+    access_log /home/web/log/nginx_access.log;
+    error_log /home/web/log/nginx_error.log;
+}
+```
+
 
 
 
