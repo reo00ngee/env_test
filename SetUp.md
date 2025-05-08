@@ -1,4 +1,11 @@
-[TOC]
+# Table of Contents
+
+- [Table of Contents](#table-of-contents)
+  - [1. Overview](#1-overview)
+  - [2. Prerequisites](#2-prerequisites)
+  - [3. Set up](#3-set-up)
+    - [3-1. Install nginx and php-fpm](#3-1-install-nginx-and-php-fpm)
+
 
 ## 1. Overview
 
@@ -11,7 +18,7 @@ Docker installed on the host machine
 ## 3. Set up
 
 ### 3-1. Install nginx and php-fpm
-Make yml file , conf file , and info.php
+Make yml file , conf file , and info.php  
 Check that containers move properly
 
 ```
