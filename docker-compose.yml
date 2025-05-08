@@ -16,6 +16,12 @@ services:
       # - ./log:/home/web/log
     environment:
       - NGINX_USER=web
+    # リソース制限
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"  # 最大 1 CPU
+          memory: "512M"  # 最大 512MB メモリ
 
   php_fpm:
     build:
@@ -34,7 +40,13 @@ services:
     environment:
       - PHP_FPM_USER=web
       - PHP_FPM_GROUP=web
-
+    # リソース制限
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"  # 最大 1 CPU
+          memory: "512M"  # 最大 512MB メモリ
+          
 networks:
   custom_network:
     ipam:
