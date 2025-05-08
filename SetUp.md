@@ -129,7 +129,7 @@ phpinfo();
 ### 3-2. Configure the container to run as the web user
 Check https://hub.docker.com/_/nginx to configure NGINX to run as a non-root user in a Docker environment.  
 Configure PHP-FPM to run as a non-root user by modifying its configuration file.  
-Due to the need for detailed configuration, NGINX and PHP-FPM are installed via Dockerfile, and the documentation structure is reorganized to manage configuration files more clearly.
+Due to the need for detailed configuration, NGINX and PHP-FPM are installed via Dockerfile, and the documentation structure is reorganized to manage configuration files more clearly.  
 Confirm that the application operates under a non-root user. 
 
 ```
@@ -304,6 +304,18 @@ http {
 
 ### 3-3. Configure to output log files
 Configure to output log files with conf files.  
+Note: Since mounting had to be disabled when installing NGINX from the Dockerfile in the Docker environment, it was necessary to check error messages from within the container using commands.
+
+```
+docker exec -it web-server bash
+cat home/web/log/nginx_access.log 
+cat home/web/log/nginx_error.log 
+
+docker exec -it php-fpm bash
+cat home/web/log/php-error.log
+cat home/web/log/php-slow.log
+```
+
 
 - php/php.ini
 ```
@@ -338,6 +350,17 @@ http {
     access_log /home/web/log/nginx_access.log;
     error_log /home/web/log/nginx_error.log;
 }
+```
+
+- www/test-error.php(for log test)
+```
+<?php
+// 未定義変数の使用（Warning 発生）
+echo $undefined_variable;
+
+// 明示的なエラー
+trigger_error("手動エラー: テスト中", E_USER_ERROR);
+
 ```
 
 
