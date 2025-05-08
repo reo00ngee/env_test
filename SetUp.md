@@ -5,6 +5,7 @@
   - [2. Prerequisites](#2-prerequisites)
   - [3. Set up](#3-set-up)
     - [3-1. Install nginx and php-fpm](#3-1-install-nginx-and-php-fpm)
+    - [3-1. Install nginx and php-fpm](#3-1-install-nginx-and-php-fpm-1)
 
 
 ## 1. Overview
@@ -18,8 +19,10 @@ Docker installed on the host machine
 ## 3. Set up
 
 ### 3-1. Install nginx and php-fpm
-Make yml file , conf file , and info.php  
-Check that containers move properly
+Create yml, conf, and info.php files.  
+Verify that the containers run properly.  
+Confirm that the configured IP address works as expected.  
+Note: The original IP address was already in use on my host machine, so I changed it to one that is available.  
 
 ```
 docker compose build
@@ -94,7 +97,7 @@ http {
 
         location ~ \.php$ {
             fastcgi_pass php-fpm:9000;
-            fastcgi_param SCRIPT_FILENAME /home/web/www$document_root$fastcgi_script_name;
+            fastcgi_param SCRIPT_FILENAME /home/web/www$fastcgi_script_name;
             include fastcgi_params;
         }
     }
@@ -126,5 +129,6 @@ error_log = /home/web/log/error.log
 phpinfo();
 ```
 
+### 3-1. Install nginx and php-fpm
 
 
