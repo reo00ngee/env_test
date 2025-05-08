@@ -1,8 +1,0 @@
-172.20.0.1 - - [07/May/2025:23:33:34 +0000] "GET /test-error.php HTTP/1.1" 200 256 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
-172.20.0.1 - - [07/May/2025:23:33:48 +0000] "GET /info.php HTTP/1.1" 200 77225 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
-172.20.0.1 - - [07/May/2025:23:34:04 +0000] "GET /info HTTP/1.1" 404 555 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
-172.20.0.1 - - [07/May/2025:23:34:19 +0000] "GET /info.php HTTP/1.1" 200 76883 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
-172.20.0.1 - - [07/May/2025:23:48:01 +0000] "GET / HTTP/1.1" 404 555 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
-172.20.0.1 - - [07/May/2025:23:48:06 +0000] "GET /info.php HTTP/1.1" 200 77225 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
-172.20.0.1 - - [07/May/2025:23:53:50 +0000] "GET /info.php HTTP/1.1" 200 76883 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
-172.20.0.1 - - [07/May/2025:23:53:56 +0000] "GET /test-error.php HTTP/1.1" 200 256 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"

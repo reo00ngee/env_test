@@ -13,7 +13,7 @@ services:
     volumes:
       - ./www:/home/web/www
       - ./nginx/default.conf:/etc/nginx/nginx.conf
-      - ./log:/home/web/log
+      # - ./log:/home/web/log
     environment:
       - NGINX_USER=web
 
@@ -30,7 +30,7 @@ services:
       - ./php/php.ini:/usr/local/etc/php/php.ini
       - ./php/php-fpm.conf:/usr/local/etc/php-fpm.conf
       - ./php/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
-      - ./log:/home/web/log
+      # - ./log:/home/web/log
     environment:
       - PHP_FPM_USER=web
       - PHP_FPM_GROUP=web
