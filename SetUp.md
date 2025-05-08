@@ -1,3 +1,5 @@
+[TOC]
+
 ## 1. Overview
 
 This document outlines the steps to set up a Linux server environment using Docker for web development. The server includes Nginx and PHP-FPM, configured to run under a specific user with performance and security tuning.
@@ -9,6 +11,14 @@ Docker installed on the host machine
 ## 3. Set up
 
 ### 3-1. Install nginx and php-fpm
+Make yml file , conf file , and info.php
+Check that containers move properly
+
+```
+docker compose build
+docker compose up -d
+```
+
 
 - docker-compose.yml
 ```
@@ -82,6 +92,31 @@ http {
         }
     }
 }
+```
+
+- php-fpm.conf
+
+```
+[www]
+user = web
+group = web
+listen = 9000
+listen.owner = web
+listen.group = web
+listen.mode = 0660
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3
+access.log = /home/web/log/access.log
+error_log = /home/web/log/error.log
+```
+
+- www/info.php
+```
+<?php
+phpinfo();
 ```
 
 
