@@ -7,6 +7,9 @@
     - [3-1. Install nginx and php-fpm](#3-1-install-nginx-and-php-fpm)
     - [3-2. Configure the container to run as the web user](#3-2-configure-the-container-to-run-as-the-web-user)
     - [3-3. Configure to output log files](#3-3-configure-to-output-log-files)
+    - [3-4. Performance and security measures](#3-4-performance-and-security-measures)
+      - [for performance](#for-performance)
+      - [for security](#for-security)
 
 
 ## 1. Overview
@@ -373,6 +376,40 @@ trigger_error("手動エラー: テスト中", E_USER_ERROR);
 
 ```
 
+### 3-4. Performance and security measures
+Configure the conf file to enhance performance and implement security measures.  
 
+#### for performance
+- docker-compose.yml
+```
+    # add to each services
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"  # 最大 1 CPU
+          memory: "512M"  # 最大 512MB メモリ
+```
 
+- nginx/default.conf
+```
+worker_processes auto; # 自動でCPU数を取得してプロセス数を決定
 
+location ~* \.(jpg|jpeg|png|gif|ico|css|js|woff|woff2|ttf|svg|eot)$ {
+    expires 30d;
+    access_log off;
+}
+
+http {
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+}
+```
+
+#### for security
+- nginx/default.conf
+```
+# セキュリティヘッダーの追加
+add_header X-Content-Type-Options nosniff;
+add_header X-Frame-Options SAMEORIGIN;
+add_header X-XSS-Protection "1; mode=block";
+```
