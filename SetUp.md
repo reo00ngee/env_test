@@ -5,7 +5,7 @@
   - [2. Prerequisites](#2-prerequisites)
   - [3. Set up](#3-set-up)
     - [3-1. Install nginx and php-fpm](#3-1-install-nginx-and-php-fpm)
-    - [3-1. Install nginx and php-fpm](#3-1-install-nginx-and-php-fpm-1)
+    - [3-2. Configure the container to run as the web user](#3-2-configure-the-container-to-run-as-the-web-user)
 
 
 ## 1. Overview
@@ -22,12 +22,12 @@ Docker installed on the host machine
 Create yml, conf, and info.php files.  
 Verify that the containers run properly.  
 Confirm that the configured IP address works as expected.  
-Note: The original IP address was already in use on my host machine, so I changed it to one that is available.  
 
 ```
 docker compose build
 docker compose up -d
 ```
+Note: The original IP address was already in use on my host machine, so I changed it to one that is available.  
 
 
 - docker-compose.yml
@@ -81,8 +81,6 @@ events {
 }
 
 http {
-    access_log /home/web/log/access.log;
-    error_log /home/web/log/error.log;
 
     server {
         listen 80;
@@ -119,8 +117,6 @@ pm.max_children = 5
 pm.start_servers = 2
 pm.min_spare_servers = 1
 pm.max_spare_servers = 3
-access.log = /home/web/log/access.log
-error_log = /home/web/log/error.log
 ```
 
 - www/info.php
@@ -129,6 +125,181 @@ error_log = /home/web/log/error.log
 phpinfo();
 ```
 
-### 3-1. Install nginx and php-fpm
+### 3-2. Configure the container to run as the web user
+Check https://hub.docker.com/_/nginx to configure NGINX to run as a non-root user in a Docker environment.  
+Configure PHP-FPM to run as a non-root user by modifying its configuration file.  
+Due to the need for detailed configuration, NGINX and PHP-FPM are installed via Dockerfile, and the documentation structure is reorganized to manage configuration files more clearly.
+Confirm that the application operates under a non-root user. 
+
+```
+docker exec -it web-server whoami
+docker exec -it php-fpm whoami
+```
+
+- Project structure
+```
+Project/
+├── docker-compose.yml
+├── nginx
+│   └── default.conf
+│   └── Dockerfile
+├── php
+│   └── php-fpm.d
+│         └── www.conf
+│   └── Dockerfile
+│   └── php-fpm.conf
+│   └── php-fpm.ini
+├── www/
+│   └── info.php
+├── log/
+```
+
+- docker-compose.yml
+```
+services:
+  web_server:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+  
+  php_fpm:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+
+```
+
+- php/Dockerfile
+```
+FROM php:8.0-fpm
+
+# 必要なPHP拡張をインストール
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd \
+    && apt-get clean
+
+# webユーザーとグループを作成
+RUN groupadd -g 1000 web && useradd -m -u 1000 -g web web
+
+
+# 作業ディレクトリ
+WORKDIR /var/www/html
+
+# FPMの設定ファイルにwebユーザーを設定する（`www.conf` にも対応しておく）
+RUN sed -i 's/^user = .*/user = web/' /usr/local/etc/php-fpm.d/www.conf && \
+    sed -i 's/^group = .*/group = web/' /usr/local/etc/php-fpm.d/www.conf && \
+    sed -i 's/^listen.owner = .*/listen.owner = web/' /usr/local/etc/php-fpm.d/www.conf && \
+    sed -i 's/^listen.group = .*/listen.group = web/' /usr/local/etc/php-fpm.d/www.conf
+
+# コンテナ内でwebユーザーとして実行する
+USER web
+
+# ログディレクトリ作成と所有権設定
+RUN mkdir -p /home/web/log \
+    && touch /home/web/log/php-error.log \
+    && touch /home/web/log/php-slow.log \
+    && chown -R web:web /home/web/log
+
+# ポート9000を公開
+EXPOSE 9000
+
+# php-fpm を起動
+CMD ["php-fpm"]
+
+```
+
+- php/php-fpm.d/www.conf
+```
+[www]
+
+user = web
+group = web
+
+listen = 9000
+listen.owner = web
+listen.group = web
+listen.mode = 0660
+
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3
+```
+
+- nginx/Dockerfile
+```
+FROM nginx:latest
+
+# 非rootユーザー「web」を作成
+RUN groupadd -r web && useradd -r -g web -m web
+
+# NGINXの設定ファイルをコピー
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+# 必要なディレクトリを作成（webユーザーに書き込み権限を付与）
+RUN mkdir -p /tmp/client_temp /tmp/proxy_temp /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp \
+    && mkdir -p /home/web/log /home/web/www \
+    && chown -R web:web /tmp /home/web/log /home/web/www
+
+# PIDファイルの場所を変更（webユーザー向け）
+RUN sed -i 's|/var/run/nginx.pid|/tmp/nginx.pid|' /etc/nginx/nginx.conf
+
+USER web
+
+RUN mkdir -p /home/web/log && chown -R web:web /home/web/log
+
+
+EXPOSE 8080
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+```
+
+- nginx/default.conf
+```
+# user web;
+worker_processes 1;
+pid        /tmp/nginx.pid;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    access_log /home/web/log/nginx_access.log;
+    error_log /home/web/log/nginx_error.log;
+
+    
+    # 一時ファイルのパスを変更（非rootユーザーに書き込み可能）
+    client_body_temp_path /tmp/client_temp;
+    proxy_temp_path /tmp/proxy_temp;
+    fastcgi_temp_path /tmp/fastcgi_temp;
+    uwsgi_temp_path /tmp/uwsgi_temp;
+    scgi_temp_path /tmp/scgi_temp;
+
+    server {
+        listen 8080;
+        server_name localhost;
+
+        root /home/web/www;
+        index index.php;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+
+        location ~ \.php$ {
+            fastcgi_pass php-fpm:9000;
+            fastcgi_param SCRIPT_FILENAME /home/web/www$fastcgi_script_name;
+            include fastcgi_params;
+        }
+    }
+}
+```
+
 
 
