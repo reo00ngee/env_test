@@ -130,6 +130,16 @@ phpinfo();
 Check https://hub.docker.com/_/nginx to configure NGINX to run as a non-root user in a Docker environment.  
 Configure PHP-FPM to run as a non-root user by modifying its configuration file.  
 Due to the need for detailed configuration, NGINX and PHP-FPM are installed via Dockerfile, and the documentation structure is reorganized to manage configuration files more clearly.  
+
+Confirm that the web user is created correctly.  
+```
+docker exec -it web-server bash
+ls -ld /home/web
+
+docker exec -it php-fpm bash
+ls -ld /home/web
+```
+
 Confirm that the application operates under a non-root user. 
 
 ```
