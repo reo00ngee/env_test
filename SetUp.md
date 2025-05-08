@@ -1,0 +1,51 @@
+1. Overview
+
+This document outlines the steps to set up a Linux server environment using Docker for web development. The server includes Nginx and PHP-FPM, configured to run under a specific user with performance and security tuning.
+
+2. Prerequisites
+
+Docker installed on the host machine
+
+3. Set up
+
+3-1. 
+```
+services:
+  web_server:
+    image: nginx
+    container_name: web-server
+    networks:
+      custom_network:
+        ipv4_address: 172.20.0.10
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www:/home/web/www
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./log:/home/web/log
+    environment:
+      - NGINX_USER=web
+
+  php_fpm:
+    image: php:7.4-fpm
+    container_name: php-fpm
+    networks:
+      custom_network:
+        ipv4_address: 172.20.0.11
+    volumes:
+      - ./www:/home/web/www
+      - ./php-fpm.conf:/etc/php/7.4/fpm/pool.d/www.conf
+      - ./log:/home/web/log
+    environment:
+      - PHP_FPM_USER=web
+      - PHP_FPM_GROUP=web
+
+networks:
+  custom_network:
+    ipam:
+      config:
+```
+
+
+
+
