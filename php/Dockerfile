@@ -1,4 +1,3 @@
-# PHP 8.0 FPMをベースにする
 FROM php:8.0-fpm
 
 # 必要なPHP拡張をインストール
@@ -10,14 +9,9 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install gd \
     && apt-get clean
 
-# webユーザーとグループを作成（UID/GIDを固定したいなら指定も可）
-RUN groupadd -r web && useradd -r -g web web
+# webユーザーとグループを作成
+RUN groupadd -g 1000 web && useradd -m -u 1000 -g web web
 
-# ログディレクトリ作成と所有権設定
-RUN mkdir -p /home/web/log \
-    && touch /home/web/log/php-error.log \
-    && touch /home/web/log/php-slow.log \
-    && chown -R web:web /home/web
 
 # 作業ディレクトリ
 WORKDIR /var/www/html
@@ -30,6 +24,12 @@ RUN sed -i 's/^user = .*/user = web/' /usr/local/etc/php-fpm.d/www.conf && \
 
 # コンテナ内でwebユーザーとして実行する
 USER web
+
+# ログディレクトリ作成と所有権設定
+RUN mkdir -p /home/web/log \
+    && touch /home/web/log/php-error.log \
+    && touch /home/web/log/php-slow.log \
+    && chown -R web:web /home/web/log
 
 # ポート9000を公開
 EXPOSE 9000
